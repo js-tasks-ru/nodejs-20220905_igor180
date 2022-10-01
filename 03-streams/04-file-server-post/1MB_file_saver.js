@@ -1,7 +1,7 @@
 const lss = require('./LimitSizeStream');
 const fs = require('fs');
 
-function OneMB_file_saver(filepath, req, res){
+module.exports = function OneMB_file_saver(filepath, req, res){
   
     const limStream = new lss({limit: 1024*1024});
           
@@ -17,45 +17,47 @@ function OneMB_file_saver(filepath, req, res){
             res.statusCode = 413;
             res.end('file is bigger then 1MB');
 
-            fs.unlink(filepath, (error) => {});
+            fs.unlink(filepath);
             
         }
     });
 
     stream.on('error', (error) => {
-        if (error.code === 'ENOENT'){
-        
-            res.statusCode = 404;
-            res.end('file not found');
-        
-        } else if(error.code === 'EEXIST'){
+        if (error){
+            if (error.code === 'ENOENT'){
+            
+                res.statusCode = 404;
+                res.end('file not found');
+            
+            } else if(error.code === 'EEXIST'){
 
-            res.statusCode = 409;
-            res.end('такой файл уже есть');
+                res.statusCode = 409;
+                res.end('такой файл уже есть');
 
-        } else {
+            } else {
 
-            fs.unlink(filepath, (err) => {});
-            res.statusCode = 500;
-            res.end('something went wrong');
+                fs.unlink(filepath);
+                res.statusCode = 500;
+                res.end('something went wrong');
+            }
         }
     });
 
 
     req.on('aborted', () => {
 
-        fs.unlink(filepath, (err) => {});
+        fs.unlink(filepath);
 
     });
 
 
-    stream.on('finish', () => {
-        res.statusCode = 201;
-        res.end('файл записан');
+    stream.on('finish', (err) => {
+        if (!err){
+            res.statusCode = 201;
+            res.end('файл записан');
+        }
     });
 
 
       
-}
-
-module.exports = OneMB_file_saver;
+};
