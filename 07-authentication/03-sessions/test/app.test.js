@@ -41,7 +41,7 @@ describe('authentication/sessions', () => {
 
       const response = await request({
         method: 'post',
-        url: 'http://localhost:3000/api/login',
+        url: 'http://127.0.0.1:3000/api/login',
         data: userData,
       });
 
@@ -68,7 +68,7 @@ describe('authentication/sessions', () => {
 
       const response = await request({
         method: 'get',
-        url: 'http://localhost:3000/api/me',
+        url: 'http://127.0.0.1:3000/api/me',
         headers: {
           'Authorization': 'Bearer token',
         },
@@ -95,7 +95,7 @@ describe('authentication/sessions', () => {
 
       await request({
         method: 'get',
-        url: 'http://localhost:3000/api/me',
+        url: 'http://127.0.0.1:3000/api/me',
         headers: {
           'Authorization': 'Bearer token',
         },
@@ -108,7 +108,7 @@ describe('authentication/sessions', () => {
     it('несуществующий токен должен приводить к ошибке', async () => {
       const response = await request({
         method: 'get',
-        url: 'http://localhost:3000/api/me',
+        url: 'http://127.0.0.1:3000/api/me',
         headers: {
           'Authorization': 'Bearer not_existing_token',
         },
@@ -121,7 +121,7 @@ describe('authentication/sessions', () => {
     it('незалогиненный пользователь не может сделать запрос на /me', async () => {
       const response = await request({
         method: 'get',
-        url: 'http://localhost:3000/api/me',
+        url: 'http://127.0.0.1:3000/api/me',
       });
 
       expect(response.status).to.equal(401);
