@@ -19,6 +19,7 @@ const transportEngine = process.env.NODE_ENV === 'test' ?
       pass: config.mailer.password,
     },
   });
+//const transportEngine = new StubTransport();
 
 const transport = nodemailer.createTransport(transportEngine);
 
