@@ -41,7 +41,7 @@ describe('websockets/chat', () => {
     });
 
     it('неаутентифицированный клиент не может подключиться по вебсокету', (done) => {
-      client = io('http://localhost:3000');
+      client = io('http://127.0.0.1:3000');
 
       client.on('connect_error', (err) => {
         expect(err.message).to.equal('anonymous sessions are not allowed');
@@ -61,7 +61,7 @@ describe('websockets/chat', () => {
 
       await Session.create({token: 'token', user: u, lastVisit: new Date()});
 
-      client = io('http://localhost:3000?token=token');
+      client = io('http://127.0.0.1:3000?token=token');
       let resolve;
       const promise = new Promise((_resolve) => {
         resolve = _resolve;
@@ -85,7 +85,7 @@ describe('websockets/chat', () => {
 
       await Session.create({token: 'token', user: u, lastVisit: new Date()});
 
-      client = io('http://localhost:3000?token=token');
+      client = io('http://127.0.0.1:3000?token=token');
       let resolve;
       const promise = new Promise((_resolve) => {
         resolve = _resolve;
@@ -136,7 +136,7 @@ describe('websockets/chat', () => {
 
       const response = await request({
         method: 'get',
-        url: 'http://localhost:3001/api/messages',
+        url: 'http://127.0.0.1:3001/api/messages',
         headers: {
           'Authorization': 'Bearer token',
         },
@@ -155,7 +155,7 @@ describe('websockets/chat', () => {
     it('незалогиненный пользователь не может сделать запрос на /messages', async () => {
       const response = await request({
         method: 'get',
-        url: 'http://localhost:3001/api/messages',
+        url: 'http://127.0.0.1:3001/api/messages',
       });
 
       expect(response.status).to.equal(401);
